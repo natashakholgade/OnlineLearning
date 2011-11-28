@@ -1,0 +1,8 @@
+labelIDs=unique(labels);
+
+for i=1:length(labelIDs)
+    idx=labels==labelIDs;
+    featuresi=features(:,idx);
+    labelsi=labels(idx);
+    
+end

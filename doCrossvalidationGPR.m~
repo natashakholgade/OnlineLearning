@@ -1,0 +1,16 @@
+[pts,id,labels,features]=readFile('hw5-data/oakland_part3_am_rf.node_features');
+load nums_randomlyrearranged;
+features=features(1:end-1,:);
+cd GPR
+
+trainsize=round(length(nums)/20);
+for i=1:trainsize:length(nums)
+    trainnums=i:i+trainsize-1;
+    if i+trainsize-1>length(nums)
+        trainnums=i:length(nums);
+    end
+    testnums=[1:i-1,trainnums(end)+1:length(nums)];
+    [Idxdecision,totalcorrect,percentclasscorrect]=
+    
+end
+cd ../

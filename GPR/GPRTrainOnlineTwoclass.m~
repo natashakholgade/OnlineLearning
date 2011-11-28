@@ -1,0 +1,20 @@
+function Kinvtrain=GPRTrainOnlineTwoclass(Xtrain,Ftrain,kernelFunc,params)
+
+ntrain=size(Xtrain,2);
+Ktrain=zeros(ntrain,ntrain);
+
+Kinvtrain(1,1)=1/(kernelFunc(Xtrain(:,1),Xtrain(:,1),params));
+
+for i=2:size(Xtrain,2)
+    Xonlinetrain=Xtrain(:,1:i-1);
+    Fonlinetrain=Ftrain(1:i-1);
+    Xonline=Xtrain(:,i);
+    
+    % compute matrix inverse incrementally
+    k=kernelFunc(Xonlinetrain,Xonline,params);
+    kappa=kernelFunc(Xonline,Xonline,params);
+    
+    kinv=
+end
+
+end
