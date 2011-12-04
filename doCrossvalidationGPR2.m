@@ -1,6 +1,6 @@
-[pts,id,labels,features]=readFile('hw5-data/oakland_part3_am_rf.node_features');
+[pts,id,labels,features]=readFile('hw5-data/oakland_part3_an_rf.node_features');
 labels=double(labels);
-load nums_randomlyrearranged;
+load nums_randomlyrearranged2;
 features=features(1:end-1,:);
 cd GPR
 
@@ -38,5 +38,5 @@ totalcorrect=totalcorrect./numtestnums;
 
 cd ../
 
-save am_results
+save an_results
 clear

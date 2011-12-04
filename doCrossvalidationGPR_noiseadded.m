@@ -1,7 +1,10 @@
 [pts,id,labels,features]=readFile('hw5-data/oakland_part3_am_rf.node_features');
 labels=double(labels);
 load nums_randomlyrearranged;
-features=features(1:end-1,:);
+%features=features(1:end-1,:);
+nrandfeatures=20;
+%features=[features;randn(nrandfeatures,size(features,2))];
+features=[features;features+randn(size(features));features+randn(size(features));features+randn(size(features))];
 cd GPR
 
 trainsize=ceil(length(nums)/20);
@@ -13,7 +16,7 @@ numtestnums=zeros(20,1);
 
 for i=1:trainsize:length(nums)
 %i=trainsize+1;
-    fprintf('%d---\n',i);
+    fprintf('%d,',i);
     idxtrain=i:i+trainsize-1;
     if i+trainsize-1>length(nums)
         idxtrain=i:length(nums);
@@ -38,5 +41,8 @@ totalcorrect=totalcorrect./numtestnums;
 
 cd ../
 
-save am_results
+confusionmatrixnorm=bsxfun(@rdivide,confusionmatrix,sum(confusionmatrix,2));
+meanconfusionmatrixnorm=mean(confusionmatrixnorm,3)
+
+save am_results_noiseadded
 clear

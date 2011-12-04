@@ -20,11 +20,11 @@ Xonline=Xtest(:,idx);
 k=kernelFunc(Xtrain,Xonline,params);
 %kappa=kernelFunc(Xonline,Xonline,params)+lambda*lambda*eye(nsize);
 muPosterior(idx)=(muPrior(idx)'+k'*D)';
-fprintf('%d,',i);
-if mod(i-1,5000)==0
-    fprintf('\n');
-end
+%if mod(i-1,20000)==0
+%    fprintf('%d,',i);
+%end
 %KPosterior(idx,idx)=kappa-k'*KinvGPR*k;
 end
+fprintf('\n');
 
 end
