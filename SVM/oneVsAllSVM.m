@@ -3,7 +3,7 @@
 %    oneVsAllSVM(pointData, partition, params)
 %   pointData                     - Point Cloud data loaded from dataFile
 %   partition                     - Data Partition with train and test identifiers
-%   params                  {1x1} - svm parameters: lambda
+%   params                  {3x1} - svm parameters: lambda, c, t0 such that alpha = c/(lambda*(t+to)
 %   assignedLabels           Nx1  - test point classifications
 %   totalCorrect                  - percentage of correct classifications
 %   percentClassCorrect      Kx1  - percentage of correct classificaitons per class
@@ -14,7 +14,8 @@ function [assignedLabels,totalCorrect,percentClassCorrect,confusionMat,W] = ...
 
 % extract parameters and precomputed values
 lambda = params{1};
-beta = params{2};
+c = params{2};
+t0 = params{3};
 trainPtIds = partition.trainPtIds;
 trainFeat = pointData.features(:,trainPtIds);
 trainLabels = pointData.labels(trainPtIds);
@@ -23,14 +24,14 @@ testFeat = pointData.features(:,testPtIds);
 testLabels = pointData.labels(testPtIds)';
 
 %% Train: Update one-vs-all weights for each new data point
-% equalWeights = ones(pointData.numFeatures, 1).*(1/pointData.numFeatures);
-% W = repmat(equalWeights, 1, pointData.numClasses);
-W = zeros(pointData.numFeatures, pointData.numClasses);
+equalWeights = ones(pointData.numFeatures, 1);
+W = repmat(equalWeights./norm(equalWeights), 1, pointData.numClasses);
+% W = zeros(pointData.numFeatures, pointData.numClasses);
 
 for pt = 1:partition.trainSize;
-   alpha = beta/(lambda*(pt+10)); % typical 1/(lambda*t) alpha value
+   alpha = c/(lambda*(pt+t0)); 
    y = (pointData.classes == trainLabels(pt)).*2 - 1; % set y in {-1,1}
-   W = updateWeights(trainFeat(:,pt), y, W, alpha, beta);
+   W = updateWeights(trainFeat(:,pt), y, W, alpha, lambda);
 end
 
 %% Test: Classify and compute statistics
@@ -61,26 +62,19 @@ totalCorrect = sum(numCorrectClass)/partition.testSize;
 end
 
 %% Update weights per class using subgradient
-function updatedW = updateWeights(feat, y, W, alpha, beta)
+function updatedW = updateWeights(feat, y, W, alpha, lambda)
     
 updatedW = zeros(size(W));
 nClasses = size(W,2);
 for k=1:nClasses
     
-    subgrad = W(:,k).*alpha;
+    subgrad = W(:,k).*lambda;
     if (y(k)*(W(:,k)'*feat) < 1), 
         subgrad = subgrad - y(k)*feat; 
     end
     updatedW(:,k) = W(:,k) - alpha*subgrad;
     sizeW = norm(updatedW(:,k));
     updatedW(:,k) = updatedW(:,k) ./ sizeW;
-    
-%     if (y(k)*(W(:,k)'*feat) < 1),
-%         subgrad = W(:,k).*alpha - y(k)*feat;
-%         updatedW(:,k) = W(:,k) - alpha*subgrad;
-%         sizeW = norm(updatedW(:,k));
-%         updatedW(:,k) = updatedW(:,k) ./ sizeW;
-%     end
     
 end
 
