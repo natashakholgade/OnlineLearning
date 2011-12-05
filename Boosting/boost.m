@@ -9,6 +9,10 @@ W=zeros(size(X,1)+1,T);
 Alpha=zeros(1,T);
 for t=1:T
     [wt,p]=optimalDecisionStump(X,Y,f);
+    p
+    if p<0.08
+        break;
+    end    
     ht=sign(wt'*[X;ones(1,N)]);
     idx=ht~=Y;
     epsratio=sum(exp(-Y(~idx).*f(~idx)),2)/sum(exp(-Y(idx).*f(idx)),2);
@@ -22,23 +26,19 @@ for t=1:T
         subplot(1,2,1);
         Xpos=X(:,sign(f)==Y);
         Xneg=X(:,sign(f)~=Y);
-        plot3(Xpos(1,:),Xpos(2,:),Xpos(3,:),'g.'); hold on;
-        plot3(Xneg(1,:),Xneg(2,:),Xneg(3,:),'r.');        
+        plot(Xpos(1,:),Xpos(2,:),'g.'); hold on;
+        plot(Xneg(1,:),Xneg(2,:),'r.');        
         %if (wt(1)>0)
         %    plot(-wt(end)*ones(1,2),[-1,1],'b-');
         %else
         %    plot([-1,1],-wt(end)*ones(1,2),'b-');
         %end
         drawnow;
-    end
-    if p<0.01
-        break;
-    end
-    
+    end    
 end
 
-W=W(:,1:t);
-Alpha=Alpha(1:t);
+W=W(:,1:t-1);
+Alpha=Alpha(1:t-1);
 
 end
 
