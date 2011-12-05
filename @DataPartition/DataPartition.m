@@ -26,7 +26,7 @@ classdef DataPartition
                obj.testPtIds = test;
                obj.testSize = size(test,1);
            else
-               error('Not enough input arguments. Train and test data should be provided, or none.'); 
+               error('Incorrect number of input arguments. Train and test data should be provided, or none.'); 
            end
        end
        

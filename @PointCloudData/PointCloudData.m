@@ -41,7 +41,14 @@ classdef PointCloudData
               obj.numFeatures = size(obj.features,1);
               obj.ids = ptIdentifiers;
            else
-               error('Not enough input arguments. Path to data file should be provided.'); 
+              obj.pts = [];
+              obj.numPts = 0;
+              obj.labels = [];
+              obj.classes = [];
+              obj.numClasses = 0;
+              obj.features = [];
+              obj.numFeatures = 0;
+              obj.ids = [];
            end
        end
        
