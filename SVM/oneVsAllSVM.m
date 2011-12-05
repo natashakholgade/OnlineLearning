@@ -23,7 +23,7 @@ W = repmat(equalWeights, 1, pointData.numClasses);
 
 for pt = 1:partition.trainSize;
    ptId = trainPtIds(pt);
-   alpha = 1/(lambda*(pt+1));
+   alpha = 1/(lambda*(pt+1)); % typical 1/(lambda*t) alpha value
    y = (pointData.classes == pointData.labels(ptId)).*2 - 1; % set y in {-1,1}
    W = updateWeights(pointData.features(:,ptId), y, W, alpha);
 end
