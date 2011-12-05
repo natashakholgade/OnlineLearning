@@ -1,13 +1,27 @@
+% Point Cloud Data 
+% Properties:
+%     pts         3xN - 3D points
+%     numPts          - total number of points: N
+%     labels      1xN - points labels
+%     classes     Kx1 - classes
+%     numClasses      - number of classes: K
+%     features    FxN -  point features
+%     numFeatures     - number of feature dimentions: F
+%     ids           N - point unique identifiers
 classdef PointCloudData
    properties
-      pts
-      numPts
-      labels
-      features
-      ids
-      classes
-      numClasses
+       
+      pts           % N 3D points
+      numPts        % total number of points: N
+      labels        % 1xN points labels
+      classes       % Kx1 classes
+      numClasses    % number of classes: K
+      features      % FxN point features
+      numFeatures   % number of feature dimentions: F
+      ids           % N point unique identifiers
+      
    end
+   
    methods
        
        % Constructor
@@ -21,10 +35,11 @@ classdef PointCloudData
               obj.pts = pt;
               obj.numPts = size(obj.pts,2);
               obj.labels = double(ptLabels);
-              obj.features = ptFeatures;
-              obj.ids = ptIdentifiers;
               obj.classes = unique(obj.labels)';
               obj.numClasses = length(obj.classes);
+              obj.features = ptFeatures;
+              obj.numFeatures = size(obj.features,1);
+              obj.ids = ptIdentifiers;
            else
                error('Not enough input arguments. Path to data file should be provided.'); 
            end

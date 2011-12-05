@@ -1,25 +1,60 @@
-% [W, classes] = oneVsAllSVM(features, labels)
-%   features    MxN - M features for N data points
-%   labels      1xN - data point labels (K classes)
-%   W           MxK - feature weights learned for all K classes
-%   classes     Kx1 - classes identifiers (ordered as in W)
-function [W, classes] = oneVsAllSVM(features, labels, lambda)
+% Train and test One-Vs-All SVM for given partition
+% [assigedLabels,totalCorrect,percentClassCorrect,confusionMat,W] = ...
+%    oneVsAllSVM(pointData, partition, params)
+%   pointData                     - Point Cloud data loaded from dataFile
+%   partition                     - Data Partition with train and test identifiers
+%   params                  {1x1} - svm parameters: lambda
+%   assignedLabels           Nx1  - test point classifications
+%   totalCorrect                  - percentage of correct classifications
+%   percentClassCorrect      Kx1  - percentage of correct classificaitons per class
+%   confusionMat             KxK  - confusion matrix
+%   W                        FxK  - learned feature weights per class
+function [assignedLabels,totalCorrect,percentClassCorrect,confusionMat,W] = ...
+    oneVsAllSVM(pointData, partition, params)
 
-% Find number of classes
-classes = unique(labels)';
-nClasses = length(classes);
+% extract parameters and precomputed values
+lambda = params{1};
+trainPtIds = partition.trainPtIds;
+testPtIds = partition.testPtIds;
 
-% Allocate necessary space
-nFeatures = size(features,1);
-W = repmat(ones(nFeatures, 1).*(1/nFeatures), 1, nClasses);
+%% Train: Update one-vs-all weights for each new data point
+equalWeights = ones(pointData.numFeatures, 1).*(1/pointData.numFeatures);
+W = repmat(equalWeights, 1, pointData.numClasses);
 
-% Update one-vs-all weights for each new data point
-nPts = size(features, 2);
-for pt = 1:nPts
+for pt = 1:partition.trainSize;
+   ptId = trainPtIds(pt);
    alpha = 1/(lambda*(pt+1));
-   y = (classes == labels(pt)).*2 - 1; % set y in {-1,1}
-   W = updateWeights(features(:,pt), y, W, alpha);
+   y = (pointData.classes == pointData.labels(ptId)).*2 - 1; % set y in {-1,1}
+   W = updateWeights(pointData.features(:,ptId), y, W, alpha);
 end
+
+%% Test: Classify and compute statistics
+numCorrectClass = zeros(pointData.numClasses,1);
+percentClassCorrect = zeros(pointData.numClasses,1);
+confusionMat = zeros(pointData.numClasses,pointData.numClasses);
+
+% classify test data
+testY = pointData.labels(testPtIds)';
+testFeat = pointData.features(:,testPtIds);
+classScores = W'*testFeat;
+[~,assignedClassPos] = max(classScores,[],1);
+assignedLabels = pointData.classes(assignedClassPos');
+
+% compute correct percentage per class and confusion matrix
+correct = testY == assignedLabels;
+for k = 1:pointData.numClasses
+    
+    ptsInClass = (testY == pointData.classes(k));
+    numCorrectClass(k) = sum(correct == 1 & testY == pointData.classes(k));
+    percentClassCorrect(k) = numCorrectClass(k)/sum(ptsInClass);
+    
+    for c = 1:pointData.numClasses
+        confusionMat(k,c) = sum(ptsInClass & assignedLabels == pointData.classes(c));
+    end
+end
+confusionMat=bsxfun(@rdivide,confusionMat,sum(confusionMat,2));
+
+totalCorrect = sum(numCorrectClass)/partition.testSize;
 
 end
 
