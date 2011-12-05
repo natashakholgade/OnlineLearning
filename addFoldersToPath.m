@@ -1,2 +1,2 @@
 % Append relevant subdirectories to Matlab's path
-addpath SVM GPR
+addpath SVM GPR Boosting
