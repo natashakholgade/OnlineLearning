@@ -1,18 +1,19 @@
 function [W,Alpha]=boost(X,Y)
 
-T=100;
+T=20;
 
 N=size(X,2);
-toplot=true;
+toplot=false;
 f=zeros(1,N);
 W=zeros(size(X,1)+1,T);
 Alpha=zeros(1,T);
+
 for t=1:T
     [wt,p]=optimalDecisionStump(X,Y,f);
     p
-    if p<0.08
-        break;
-    end    
+    %if p<0.08
+    %    break;
+    %end    
     ht=sign(wt'*[X;ones(1,N)]);
     idx=ht~=Y;
     epsratio=sum(exp(-Y(~idx).*f(~idx)),2)/sum(exp(-Y(idx).*f(idx)),2);
@@ -37,8 +38,8 @@ for t=1:T
     end    
 end
 
-W=W(:,1:t-1);
-Alpha=Alpha(1:t-1);
+%W=W(:,1:t-1);
+%Alpha=Alpha(1:t-1);
 
 end
 
@@ -52,7 +53,7 @@ proj=zeros(size(X,1),nsearch);
 
 for j=1:size(X,1)
     dsearch=(max(X(j,:))-min(X(j,:)))/(nsearch-1);
-    theta=min(X(j,:)):dsearch:max(X(j,:));
+    theta=-(min(X(j,:)):dsearch:max(X(j,:)));
     for k=1:length(theta)
         w_x=X(j,:)+theta(k);
         h_x=sign(w_x);
@@ -61,11 +62,11 @@ for j=1:size(X,1)
     end
 end
 
-proj=abs(proj);
-subplot(1,2,2);
-hold off; plot(proj(1,:),'b-'); hold on; 
-plot(proj(2,:),'r-'); 
-axis([0,size(proj,2),0,.1]);
+%proj=abs(proj);
+%subplot(1,2,2);
+%hold off; plot(proj(1,:),'b-'); hold on; 
+%plot(proj(2,:),'r-'); 
+%axis([0,size(proj,2),0,.1]);
 [j,idx]=find(proj==max(proj(:)));
 j=j(round(end/2));
 idx=idx(round(end/2));

@@ -1,5 +1,5 @@
 function [W,Alpha]=adaboost(X,Y)
-T=100;
+T=20;
 N=size(X,2);
 D=1/N*ones(1,N);
 f=zeros(1,size(X,2));
@@ -9,8 +9,9 @@ Alpha=zeros(1,T);
 
 for t=1:T
     [wt,e]=optimalDecisionStump(X,Y,D);
-    
-    %abs(0.5-e)
+    %e
+    %pause;
+    [e,abs(0.5-e)]
     ht=sign(wt'*[X;ones(1,N)]);
     alphat=.5*log((1-e)/e);
     f=f+alphat*ht;
@@ -18,20 +19,25 @@ for t=1:T
     Alpha(t)=alphat;
     toplot=true;
     if (toplot)
-        subplot(1,2,1);
         Xpos=X(:,sign(f)==Y);
         Xneg=X(:,sign(f)~=Y);
-        plot(Xpos(1,:),Xpos(2,:),'g.'); hold on;
-        plot(Xneg(1,:),Xneg(2,:),'r.');
-        if (wt(1)>0)
-            plot(-wt(end)*ones(1,2),[-1,1],'b-');
-        else
-            plot([-1,1],-wt(end)*ones(1,2),'b-');
+        for i=1:size(Xpos,1)-1
+        subplot(3,3,i);
+        hold off; plot(Xpos(i,:),Xpos(i+1,:),'g.'); hold on;
+        plot(Xneg(i,:),Xneg(i+1,:),'r.');
         end
+        %if (wt(1)>0)
+        %    plot(-wt(end)*ones(1,2),[-1,1],'b-');
+        %else
+        %    plot([-1,1],-wt(end)*ones(1,2),'b-');
+        %end
         drawnow;
     end
     D=D.*exp(-alphat*Y.*ht);
-    D=D/sum(D);    
+    D=D/sum(D);
+    if abs(0.5-e)>.49
+        break;
+    end
 end
 
 end
@@ -44,7 +50,7 @@ E=eye(size(X,1));
 
 for j=1:size(X,1)
     dsearch=(max(X(j,:))-min(X(j,:)))/(nsearch-1);
-    theta=min(X(j,:)):dsearch:max(X(j,:));
+    theta=-max(X(j,:)):dsearch:-min(X(j,:));
     for k=1:length(theta)
         w_x=X(j,:)+theta(k);
         h_x=sign(w_x);
@@ -52,15 +58,22 @@ for j=1:size(X,1)
     end    
 end
 subplot(1,2,2);
-hold off; plot(abs(0.5-Er(1,:)),'b-'); hold on; 
-plot(abs(0.5-Er(2,:)),'r-'); 
-axis([0,size(Er,2),0,.1]);
+hold off; 
+for j=1:size(Er,1)
+plot(abs(0.5-Er(j,:)),'b-'); hold on; 
+end
+%pause;
+%plot(abs(0.5-Er(2,:)),'r-'); 
+%axis([0,size(Er,2),0,.1]);
 [j,idx]=find(abs(0.5-Er)==max(abs(0.5-Er(:))));
 j=j(round(end/2));
 idx=idx(round(end/2));
 dsearch=(max(X(j,:))-min(X(j,:)))/(nsearch-1);
-theta=min(X(j,:)):dsearch:max(X(j,:));
+theta=-max(X(j,:)):dsearch:-min(X(j,:));
 wt=[E(:,j);theta(idx)];
 e=Er(j,idx);
+%subplot(1,2,2);
+%surf(Er);
+title(sprintf('%f',e));
 
 end
