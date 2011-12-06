@@ -50,7 +50,7 @@ learnedParameters = cell(numPartitions,1);
 for i=1:n
 
     [assigned_i,correct_i,percentClass_i,confusion_i,learned_i]= ...
-        oneVsAllSVM(pointData,partitionSet{i},{0.01, 1, 1});
+        oneVsAllSVM(pointData,partitionSet{i},{0.0001, 1, 1});
     assignedLabels{i} = assigned_i;
     totalCorrect(i)=correct_i;
     percentClassCorrect(:,i)=percentClass_i;

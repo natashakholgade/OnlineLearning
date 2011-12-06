@@ -43,10 +43,9 @@ classdef PointCloudData
               
               % normalize features
               if (nargin > 1 && normalizeFeat)
-                 % min/max except for bias term
-                 maxFeat = max(obj.features(1:end-1,:), [], 2);
-                 minFeat = min(obj.features(1:end-1,:), [], 2);
-                 obj.features = [bsxfun(@rdivide, bsxfun(@minus, obj.features(1:end-1,:), minFeat), maxFeat - minFeat); ones(1,obj.numPts)];
+                 maxFeat = max(obj.features, [], 2);
+                 minFeat = min(obj.features, [], 2);
+                 
               end
            else
               obj.pts = [];
