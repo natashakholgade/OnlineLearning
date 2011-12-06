@@ -11,7 +11,7 @@ for t=1:T
     [wt,e]=optimalDecisionStump(X,Y,D);
     %e
     %pause;
-    [e,abs(0.5-e)]
+    disp([e,abs(0.5-e)])
     ht=sign(wt'*[X;ones(1,N)]);
     alphat=.5*log((1-e)/e);
     f=f+alphat*ht;

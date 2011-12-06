@@ -1,4 +1,4 @@
-function [imulticlassdecision,totalcorrect,percentclasscorrect,confusionmatrix]=BoostOneVersusRest(features,labels,trainnums,testnums)
+function [imulticlassdecision,totalcorrect,percentclasscorrect,confusionmatrix,out]=BoostOneVersusRest(features,labels,trainnums,testnums,params)
 
 featureoffset=min(features(:,trainnums),[],2);
 featurescale=max(features(:,trainnums),[],2)-min(features(:,trainnums),[],2);
@@ -18,7 +18,11 @@ Alphas=cell(1,length(labelIDs));
 for i=1:length(labelIDs)
     l=labels(trainnums);
     y=2*double(l==labelIDs(i))-1;
-    [W,Alpha]=adaboost(trainfeatures,y);
+    if exist('params','var')
+        [W,Alpha]=boost(trainfeatures,y,params);
+    else
+        [W,Alpha]=boost(trainfeatures,y);
+    end
     Ws{i}=W;
     Alphas{i}=Alpha;
 end
@@ -52,5 +56,6 @@ end
 
 percentclasscorrect=sumIDs./numIDs
 
+out={Ws,Alphas};
 
 end

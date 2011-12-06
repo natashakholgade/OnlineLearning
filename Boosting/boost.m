@@ -1,6 +1,12 @@
-function [W,Alpha]=boost(X,Y)
+function [W,Alpha]=boost(X,Y,params)
 
-T=20;
+T=100;
+errless=.001;
+
+if exist('params','var')
+    T=params{1};
+    errless=params{2};
+end
 
 N=size(X,2);
 toplot=false;
@@ -10,10 +16,10 @@ Alpha=zeros(1,T);
 
 for t=1:T
     [wt,p]=optimalDecisionStump(X,Y,f);
-    p
-    %if p<0.08
-    %    break;
-    %end    
+    fprintf('%f,',p);
+    if mod(t,20)==0
+        fprintf('\n');
+    end
     ht=sign(wt'*[X;ones(1,N)]);
     idx=ht~=Y;
     epsratio=sum(exp(-Y(~idx).*f(~idx)),2)/sum(exp(-Y(idx).*f(idx)),2);
@@ -35,11 +41,14 @@ for t=1:T
         %    plot([-1,1],-wt(end)*ones(1,2),'b-');
         %end
         drawnow;
-    end    
+    end
+    if p<errless
+        break;
+    end
 end
 
-%W=W(:,1:t-1);
-%Alpha=Alpha(1:t-1);
+W=W(:,1:t);
+Alpha=Alpha(1:t);
 
 end
 
@@ -53,7 +62,7 @@ proj=zeros(size(X,1),nsearch);
 
 for j=1:size(X,1)
     dsearch=(max(X(j,:))-min(X(j,:)))/(nsearch-1);
-    theta=-(min(X(j,:)):dsearch:max(X(j,:)));
+    theta=(-max(X(j,:)):dsearch:-min(X(j,:)));
     for k=1:length(theta)
         w_x=X(j,:)+theta(k);
         h_x=sign(w_x);
@@ -62,7 +71,7 @@ for j=1:size(X,1)
     end
 end
 
-%proj=abs(proj);
+proj=abs(proj);
 %subplot(1,2,2);
 %hold off; plot(proj(1,:),'b-'); hold on; 
 %plot(proj(2,:),'r-'); 
@@ -71,7 +80,7 @@ end
 j=j(round(end/2));
 idx=idx(round(end/2));
 dsearch=(max(X(j,:))-min(X(j,:)))/(nsearch-1);
-theta=min(X(j,:)):dsearch:max(X(j,:));
+theta=(-max(X(j,:)):dsearch:-min(X(j,:)));
 wt=[E(:,j);theta(idx)];
 p=proj(j,idx);
 
