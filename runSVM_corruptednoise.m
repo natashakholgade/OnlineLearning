@@ -97,6 +97,7 @@ for f=1:2
 %     processingTime = toc(mytic);
            
     pointDataTest = PointCloudData(testFile,1);
+    pointDataTest = pointDataTest.addCorruptedNoisyFeatures(2);
     mytic = tic();
     
         testFeat = pointDataTest.features;

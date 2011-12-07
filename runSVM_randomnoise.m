@@ -9,9 +9,9 @@ finalLog = sprintf('%s/finalresults.log', outputFolder);
 
 %% Parameters for SVM: lambda, t0
 %  such that alpha = c/(lambda*(t+t0))
-possibleLambda = [0.01];%[0.01; 0.001; 0.0001; 0.0001];   % lambda
-possibleC = [1];%[1;5];
-possibleT0 = [10];%[10; 100; 500]; % t0
+possibleLambda = [0.01; 0.001; 0.0001; 0.0001];   % lambda
+possibleC =  [1;5];
+possibleT0 = [10; 100; 500]; % t0
       
 %% Fixed params
 numPartitions = 2; % number of partitions for training file to fit params
@@ -97,7 +97,7 @@ for f=1:2
 %     processingTime = toc(mytic);
            
     pointDataTest = PointCloudData(testFile,1);
-    pointDataTest = pointData.addCorruptedNoisyFeatures(20);
+    pointDataTest = pointDataTest.addRandomNoisyFeatures(20);
     mytic = tic();
     
         testFeat = pointDataTest.features;
