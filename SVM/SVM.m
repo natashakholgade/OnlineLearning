@@ -1,4 +1,4 @@
-% Train and test One-Vs-All SVM for given partition
+% Train and test SVM for given partition
 % [assigedLabels,totalCorrect,percentClassCorrect,confusionMat,W] = ...
 %    oneVsAllSVM(pointData, partition, params)
 %   pointData                     - Point Cloud data loaded from dataFile
@@ -10,7 +10,7 @@
 %   confusionMat             KxK  - confusion matrix
 %   W                        FxK  - learned feature weights per class
 function [assignedLabels,totalCorrect,percentClassCorrect,confusionMat,W] = ...
-    oneVsAllSVM(pointData, partition, params)
+    SVM(pointData, partition, params)
 
 % extract parameters and precomputed values
 lambda = params{1};
