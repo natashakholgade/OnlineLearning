@@ -100,7 +100,7 @@ $$\begin{bmatrix}
 
 \subsection*{AdaBoost}
 
-\textbf{Train with first file, test with the second file:}
+\textbf{Train with \textit{File\_am}, and test with \textit{File\_an}:}
 
 Best parameters: Running time $T=140$, gradient projection threshold $\eta=1e-4$.
 
@@ -118,7 +118,7 @@ $$\begin{bmatrix}
     0.1221  &  0.1457   & 0.0702   & 0.0145  &  0.6476
 \end{bmatrix}$$
 
-\textbf{Train with first file, test with the second file:}
+\textbf{Train with \textit{File\_an}, and test with \textit{File\_am}:}
 
 Best parameters: Running time $T=140$, gradient projection threshold $\eta=1e-4$.
 
@@ -156,12 +156,40 @@ Noise-corrupted versions of features when passed through GPR are classified with
 $$\begin{bmatrix} 0.8204  &  0.8757 &   0.6980  &  0.9796 &   0.5859\end{bmatrix}$$
 $$\begin{bmatrix} 0.7779  &  0.5880  &  0.9286  &  0.9950 &   0.7704\end{bmatrix}$$
 
-The same robustness is observed with AdaBoost. On adding a whole bunch of noise to the features, we get rates of .862, and, and per-class classifications of:
+The same robustness is observed with AdaBoost. On adding a whole bunch of noise to the features, we get rates of .862, and .947, and per-class classifications of:
 $$\begin{bmatrix} 0.8334 &   0.8514 &   0.6796  & 0.9775  &  0.6465\end{bmatrix}$$
-$$\begin{bmatrix} 0.7809  &  0.5733  &  0.9440&    0.9969    &0.7608\end{bmatrix}$$
-Noise-corrupted versions of features when passed through AdaBoost are classified with rates .8676 and .94, and per-class classifications are:
+$$\begin{bmatrix} 0.7985 &   0.6064   & 0.9146 &   0.9935 &   0.8167\end{bmatrix}$$
+Noise-corrupted versions of features when passed through AdaBoost are classified with rates .8676 and .945, and per-class classifications are:
 $$\begin{bmatrix} 0.8543 &   0.8548 &   0.6888&    0.9725  &  0.6410\end{bmatrix}$$
-$$\begin{bmatrix} 0.7779  &  0.5880  &  0.9286  &  0.9950 &   0.7704\end{bmatrix}$$
+$$\begin{bmatrix} 0.8063  &  0.6112 &   0.9174  &  0.9918  &  0.8062\end{bmatrix}$$
+
+We would most probably use AdaBoost for the robot because it is faster than Gaussian Process Regression during testing (though it performs just as well), and it performs better than the linear SVM. If we needed an online version of the training algorithm, we would probably use SVMs, but with kernels. We did not have time to implement the kernel SVMs, but we do notice that the dataset has some non-linearity as is evidenced by the better performance of GPR and AdaBoost.
+
+\subsection*{Pictorial Result}
+With GPR training with \textit{File\_am}, and testing with \textit{File\_an} gave us the scatter plot shown in \ref{Fig_GPR1}, while training with \textit{File\_an}, and testing with \textit{File\_am} gave us the plot in \ref{Fig_GPR2}
+\begin{figure}
+\includegraphics[width=\linewidth]{gpr_trainam_testan.png}
+\caption{Scatter plot of points from File-am classified with GPR: green = vegetation, blue = facade, really dark gray = wire, red = pole, light gray = ground}
+\label{Fig_GPR1}
+\end{figure}
+\begin{figure}
+\includegraphics[width=\linewidth]{gpr_trainan_testam.png}
+\caption{Scatter plot of points from File-an classified with GPR: green = vegetation, blue = facade, really dark gray = wire, red = pole, light gray = ground}
+\label{Fig_GPR2}
+\end{figure}
+
+With AdaBoost training with \textit{File\_am}, and testing with \textit{File\_an} gave us the scatter plot shown in \ref{Fig_Ada1}, while training with \textit{File\_an}, and testing with \textit{File\_am} gave us the plot in \ref{Fig_Ada2}
+\begin{figure}
+\includegraphics[width=\linewidth]{boost_trainam_testan.png}
+\caption{Scatter plot of points from File-am classified with AdaBoost: green = vegetation, blue = facade, really dark gray = wire, red = pole, light gray = ground}
+\label{Fig_Ada1}
+\end{figure}
+\begin{figure}
+\includegraphics[width=\linewidth]{boost_trainam_testan.png}
+\caption{Scatter plot of points from File-an classified with AdaBoost: green = vegetation, blue = facade, really dark gray = wire, red = pole, light gray = ground}
+\label{Fig_Ada2}
+\end{figure}
+
 
 \begin{enumerate}
 \item How well did it perform for online learning?  Does it perform well on the held-out data?
