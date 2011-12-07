@@ -19,47 +19,101 @@
 
 \maketitle
 
-\section*{Assignment}
+\section*{Classifiers}
 
-This assignment gives you a chance to implement some of the online learning algorithms discussed in class on real data.
+For this homework, we implemented Gaussian Process Regression (GPR), Boosting, and Online linear SVMs. GPR and boosting were not implemented in an online fashion (though boosting does lend itself to an online implementation, but we were limited in time on this homework). Gaussian Process Regression uses the covariance function, while boosting performs feature selection. We implemented Alex Grubb's version of boosting which uses the exponentiated gradient to produce our results. For the GPR, we used the exponential to the negative squared distance between features (radial basis function) as the covariance function.
 
-Automated interpretation of ladar data is crucial for outdoor vehicle operation. Your goal is to apply algorithms we discussed in class to this problem and in particular to compare and contrast the various methods. You will be building a system to classify ladar points into one of five categories: ground (supporting surface), vegetation, facade, pole, and wire.
+\section*{Performance Summary}
 
-You must implement (from the following list) 3 learners we discussed in class. (Talk to us if you're interested in implementing other variants instead.)
+For this homework, we performed two-fold cross-validation on data from one file, and then tested with data from the other file. We swapped the two files, and re-did cross-validation and training. We provide the best parameters, confusion matrices, per-class percentage performance, and net classification rate for the three classes. 
 
-\begin{itemize}
+\subsection*{Gaussian Process Regression}
 
-\item Gaussian Process Regression (choose two classes)
-\item Bayes Linear Regression (choose two classes)
-\item Gradient Descent on Square Loss
-\item Support Vector Machine (choose two, or do multi-class SVM)
-\item Online Logistic Regression
-\item NORMA: Kernelized SVM
-\item NORMA: Kernelized LogReg
-\item Multi-class Winnow
-\item Exponentiated Gradient algorithm on another loss (squared loss or log-reg)
+\textbf{Train with first file, test with the second file:}
 
-\end{itemize}
+Best parameters: radial basis function parameter $\sigma=.4$, regularization parameter $\lambda=.4642$.
 
-At least one must be a feature selecting type algorithm (i.e. winnow or another method using the exponentiated gradient), and at least one must use kernels/covariance functions. We're very flexible about implementation: we're willing to see lots of other options as well as more sophisticated approaches that use factor graphs, etc, but do less algorithms.
+Net classification rate: .8637
 
-\subsection*{Data}
-The datasets you should use are available in the provided directory, hw5-data. They are 3D point-clouds of Oakland (see~\url{http://www.cs.cmu.edu/~vmr/datasets/oakland_3d/cvpr09/doc/}).  Features are provided courtesy of Dan Munoz, but you are welcome to come up with new features to use (please explain if you do).  You should not distribute the data without permission.
+Per-class classification rate: 
+$$\begin{bmatrix}0.8208   & 0.8870  &  0.7192   & 0.9796 &   0.6670\end{bmatrix}$$
 
-There are five classes, their labels values are:
-\begin{itemize}
-\item 1004: Veg
-\item 1100: Wire
-\item 1103: Pole
-\item 1200: Ground
-\item 1400: Facade
-\end{itemize}
+Confusion matrix:
+$$\begin{bmatrix}
+0.8208 &   0.0560  & 0.0407 &   0.0015  &  0.0809\\
+    0.0758&    0.8870 &   0.0084&    0.0004 &   0.0285\\
+    0.1971   & 0.0092   & 0.7192  &  0.0046   & 0.0700\\
+    0.0018   & 0.0179    &0.0003  &  0.9796  &  0.0005\\
+    0.1316   &0.1576    &0.0421  &  0.0017  &  0.6670
+\end{bmatrix}$$
 
-Run each algorithm on both datasets and report on the performance.
+\textbf{Train with first file, test with the second file:}
 
-\section*{What to turn in}
+Best parameters: radial basis function parameter $\sigma=.4$, regularization parameter $\lambda=.4642$.
 
-We're interested in a short performance summary and nice visualizations.  You should turn in your \emph{code} and a~2-3 page \emph{report} via email.  For each learner you implemented, report on the following:
+Net classification rate: .947
+
+Per-class classification rate: 
+$$\begin{bmatrix}0.8097  &  0.5697   & 0.9279   & 0.9899  &  0.8305\end{bmatrix}$$
+
+Confusion matrix:
+$$\begin{bmatrix}
+0.8097&    0.0471&    0.0680  &  0.0010  &  0.0743\\
+    0.0685&    0.5697&    0.0183&    0.0697  &  0.2738\\
+    0.0378   & 0.0014&    0.9279  &       0 &   0.0329\\
+    0.0020 &   0.0001 &   0.0065 &   0.9899  &  0.0014\\
+    0.0611   & 0.0391  &  0.0686  &  0.0007&    0.8305\\
+\end{bmatrix}$$
+
+
+\subsection*{Linear SVMs}
+
+\subsection*{AdaBoost}
+
+\textbf{Train with first file, test with the second file:}
+
+Best parameters: radial basis function parameter $\sigma=.4$, regularization parameter $\lambda=.4642$.
+
+Net classification rate: .8637
+
+Per-class classification rate: 
+$$\begin{bmatrix}0.8208   & 0.8870  &  0.7192   & 0.9796 &   0.6670\end{bmatrix}$$
+
+Confusion matrix:
+$$\begin{bmatrix}
+0.8208 &   0.0560  & 0.0407 &   0.0015  &  0.0809\\
+    0.0758&    0.8870 &   0.0084&    0.0004 &   0.0285\\
+    0.1971   & 0.0092   & 0.7192  &  0.0046   & 0.0700\\
+    0.0018   & 0.0179    &0.0003  &  0.9796  &  0.0005\\
+    0.1316   &0.1576    &0.0421  &  0.0017  &  0.6670
+\end{bmatrix}$$
+
+\textbf{Train with first file, test with the second file:}
+
+Best parameters: radial basis function parameter $\sigma=.4$, regularization parameter $\lambda=.4642$.
+
+Net classification rate: .947
+
+Per-class classification rate: 
+$$\begin{bmatrix}0.8097  &  0.5697   & 0.9279   & 0.9899  &  0.8305\end{bmatrix}$$
+
+Confusion matrix:
+$$\begin{bmatrix}
+0.8097&    0.0471&    0.0680  &  0.0010  &  0.0743\\
+    0.0685&    0.5697&    0.0183&    0.0697  &  0.2738\\
+    0.0378   & 0.0014&    0.9279  &       0 &   0.0329\\
+    0.0020 &   0.0001 &   0.0065 &   0.9899  &  0.0014\\
+    0.0611   & 0.0391  &  0.0686  &  0.0007&    0.8305\\
+\end{bmatrix}$$
+
+We find that points belonging to the 'Pole' and 'Ground' classes do not perform well
+because there is not enough data to train them.
+
+GPR and SVM were relatively easy to implement. AdaBoost required a bit of delving into some math, but 
+we made it through.
+
+
+
 \begin{enumerate}
 \item How well did it perform for online learning?  Does it perform well on the held-out data?
 \item Are there any classes that did not get classified well?  Why do you think that is?
