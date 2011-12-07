@@ -16,7 +16,7 @@ function [assignedLabels,totalCorrect,percentClassCorrect,confusionMat,pointData
     doCrossValidationFixedParams(dataFile, fAlgorithm, algoParams, numPartitions)
 
 pointData = PointCloudData(dataFile,1);
-[partitionSet,n] = DataPartition.RandomDataPartitionSet(pointData, numPartitions);
+[partitionSet,n] = DataPartition.RandomDataPartitionSet(pointData, numPartitions, 0);
 
 assignedLabels = cell(numPartitions,1);
 totalCorrect=zeros(numPartitions,1);

@@ -22,9 +22,9 @@ classdef DataPartition
                obj.testSize = 0;
            elseif  nargin == 2
                obj.trainPtIds = train;
-               obj.trainSize = size(train,1);
+               obj.trainSize = length(train);
                obj.testPtIds = test;
-               obj.testSize = size(test,1);
+               obj.testSize = length(test);
            else
                error('Incorrect number of input arguments. Train and test data should be provided, or none.'); 
            end
@@ -36,9 +36,10 @@ classdef DataPartition
        
        % Generate random data partition set (for leave-one-out
        % corssvalidation)
-       % [s,count] = RandomDataPartitionSet(pointData, nPartitions)
+       % [s,count] = RandomDataPartitionSet(pointData, nPartitions, equalProportionTraining)
        %    pointData   - PointCloudData (with point ids)
        %    nPartitions - number of partitions of the data 
+       %    equalProportionTraining - {0,1} training set should have uniform proportion of samples from the different classes (optional)
        %    s           - cell (set) of DataPartitions
        %    count       - number of partitions (set size)
        %
@@ -46,11 +47,13 @@ classdef DataPartition
        % partition to training and the rest to testing. The different
        % possible choises of training data leads to a set of data 
        % partitions.
-       function [s, count] = RandomDataPartitionSet(pointData, nPartitions)
+       function [s, count] = RandomDataPartitionSet(pointData, nPartitions, equalProportionTraining)
            
-           if  nargin ~= 2
+           if  nargin ~= 2 &&  nargin ~= 3
                error('Incorrect number of input arguments. Point cloud data and number of partitions should be provided.'); 
            end
+           
+           if nargin < 3, equalProportionTraining = 0; end
            
            nPts = size(pointData.pts,2);
            dataPositions = 1:nPts;
@@ -72,6 +75,23 @@ classdef DataPartition
               
               % sanity check
               assert(length(train) + length(test) == nPts);
+              
+              if equalProportionTraining,
+                 
+                  ptsInClass = cell(pointData.numClasses,1);
+                  numPtsInClass = zeros(pointData.numClasses,1);
+                  classLabels = pointData.labels(train);
+                  for k=1:pointData.numClasses
+                     ptsInClass{k} =  train(classLabels == pointData.classes(k));
+                     numPtsInClass(k) = length(ptsInClass{k});
+                  end
+                  numPerClass = min(numPtsInClass);
+                  reducedTrain = [];
+                  for k=1:pointData.numClasses
+                      reducedTrain = [reducedTrain ptsInClass{k}(1:numPerClass)'];
+                  end
+                  train = reducedTrain';
+              end
               
               count = count + 1;
               s{count} = DataPartition(train, test);
