@@ -1,4 +1,5 @@
-[ptsactual,idactual,labelsactual,featuresactual]=readFile('hw5-data/oakland_part3_am_rf.node_features');
+%[ptsactual,idactual,labelsactual,featuresactual]=readFile('hw5-data/oakland_part3_am_rf.node_features');
+[ptsactual,idactual,labelsactual,featuresactual]=readFile('hw5-data/oakland_part3_an_rf.node_features');
 labelsactual=double(labelsactual);
 featuresactual=featuresactual(1:end-1,:);
 
@@ -59,7 +60,7 @@ Percentcorrect2=zeros(length(sigmas),length(lambdas));
 for i=1:length(sigmas)
     for j=1:length(lambdas)
         fprintf('sigma=%f, lambda=%f\n',sigmas(i),lambdas(j));
-        params={sigmas(i),lambdas(j)};
+        params={lambdas(j),sigmas(i)};
         fprintf('Fold1\n');
         [~,totalcorrecti,~,~]=GPROneVersusRest(features,labels,trainnumsuse,testnums,params);
         Percentcorrect1(i,j)=totalcorrecti/length(testnums);
@@ -72,4 +73,16 @@ for i=1:length(sigmas)
 end
 
 [r1,c1]=find(Percentcorrect1==max(Percentcorrect1(:)));
+[r2,c2]=find(Percentcorrect2==max(Percentcorrect2(:)));
 
+if max(Percentcorrect1(:))>max(Percentcorrect2(:))
+    r=r1; c=c1;
+else
+    r=r2; c=c2;
+end
+
+sigmause=sigmas(r);
+lambdause=lambdas(c);
+
+%save train_GPR_am
+save train_GPR_an

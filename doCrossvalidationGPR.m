@@ -2,7 +2,7 @@
 labels=double(labels);
 load nums_randomlyrearranged;
 features=features(1:end-1,:);
-cd GPR
+%cd GPR
 
 trainsize=ceil(length(nums)/20);
 
@@ -36,7 +36,7 @@ end
 
 totalcorrect=totalcorrect./numtestnums;
 
-cd ../
+%cd ../
 
 save am_results
 clear
