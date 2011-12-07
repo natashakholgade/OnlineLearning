@@ -36,11 +36,12 @@ performs feature selection, and uses the exponentiated gradient as
 suggested by Alex Grubb. We use thresholded decision stumps as linear
 classifiers in boosting.
 
-Our implementation of a Supper Vector Machine is based on the
-subgradient of the hinge loss, plus a regularization term. It operates
-fast, though requires a significant number of samples to satisfactory
-classify new data in comparison to the other algorithms being
-considered.
+Our implementation of a linear Supper Vector Machine is based on the
+subgradient of the hinge loss, plus a regularization term. We followed
+Drew's notes, and used a learning rate equal to $\alpha = c/(\lambda(t
++ t_0))$. It operates fast, though requires a significant number of
+samples to satisfactory classify new data in comparison to the other
+algorithms being considered.
 
 \section*{Performance Summary}
 For this homework, we performed two-fold cross-validation on data from
@@ -74,18 +75,60 @@ Net classification rate: $.947$.
 
 Per-class classification rate: 
 $$\begin{bmatrix}0.8097  &  0.5697   & 0.9279   & 0.9899  &  0.8305\end{bmatrix}$$
+
 \begin{figure}
 \begin{minipage}{.45\linewidth}
    \includegraphics[width=\linewidth]{confusionmatrices/gpr_train_am_test_an.png}
-   \small\centerline{Test with File-an}\normalsize
+   \small\centerline{Test with File\_an}\normalsize
    \end{minipage}
 \begin{minipage}{.45\linewidth}
    \includegraphics[width=\linewidth]{confusionmatrices/gpr_train_an_test_am.png}
-   \small\centerline{Test with File-am}\normalsize
+   \small\centerline{Test with File\_am}\normalsize
    \end{minipage}
    \caption{Confusion matrices for GPR classification.}
 \end{figure}
+
 \subsection*{Linear SVMs}
+
+\textbf{Train with \textit{File\_am}, and test with \textit{File\_an}:}
+
+Best parameters: For the learning rate $\alpha = c/(\lambda(t + t_0))$,
+we found as best combination $\lambda = 10^{-4}$, $c = 1$, and $t_0 = 100$.
+
+Net classification rate: $0.7462$
+
+Per-class classification rate: 
+\[
+\begin{bmatrix} 0.5581 & 0.1549 & 0.3610 & 0.9988 & 0.9445\end{bmatrix}
+\]
+
+\textbf{Train with \textit{File\_an}, and test with \textit{File\_am}:}
+
+Best parameters: For the learning rate $\alpha = c/(\lambda(t + t_0))$,
+we found as best combination $\lambda = 10^{-4}$, $c = 1$, and $t_0 = 10$.
+
+Net classification rate: $0.9567$
+
+Per-class classification rate: 
+\[
+\begin{bmatrix}
+0.8893    & 0.4450    & 0.6634    & 0.9941    & 0.8644
+\end{bmatrix}
+\]
+
+
+\begin{figure}
+\begin{minipage}{.45\linewidth}
+   \includegraphics[width=\linewidth]{confusionmatrices/confusionSVMQ1_1.jpeg}
+   \small\centerline{Test with File\_an}\normalsize
+   \end{minipage}
+\begin{minipage}{.45\linewidth}
+   \includegraphics[width=\linewidth]{confusionmatrices/confusionSVMQ1_2.png}
+   \small\centerline{Test with File\_am}\normalsize
+   \end{minipage}
+   \caption{Confusion matrices for linear SVM classification.}
+\end{figure}
+
 
 \subsection*{AdaBoost}
 \textbf{Train with \textit{File\_am}, and test with \textit{File\_an}:}
@@ -116,8 +159,19 @@ $$\begin{bmatrix}0.8178 &   0.6320 &   0.9104  &  0.9948  &  0.8148\end{bmatrix}
    \end{minipage}
    \caption{Confusion matrices for classification with AdaBoost.}
 \end{figure}
+
 \subsection*{Time}
-AdaBoost takes on average a long time to train (148 seconds) but just 1.12 seconds in testing as we just apply a set of thresholded linear classifiers and take their sum. GPR takes lesser training time (12.19 seconds), but it takes a longer test time (26.83 seconds), because we apply the product of the training kernel matrix inverse and the training labels (which can be precomputed) to all the kernel vectors formed with every test point to all training points.
+AdaBoost takes on average a long time to train (148 seconds) but just
+1.12 seconds in testing as we just apply a set of thresholded linear
+classifiers and take their sum. 
+
+GPR takes lesser training time (12.19
+seconds), but it takes a longer test time (26.83 seconds), because we
+apply the product of the training kernel matrix inverse and the
+training labels (which can be precomputed) to all the kernel vectors
+formed with every test point to all training points.
+
+
 \subsection*{Misclassifications}
 We find that points belonging to the `Pole', `Wire', and `Facade' classes do not always perform well because there is not enough data to train them.
 \subsection*{Ease of Implementation}
