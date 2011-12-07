@@ -16,6 +16,9 @@ function [assignedLabels,totalCorrect,percentClassCorrect,confusionMat,W] = ...
 lambda = params{1};
 c = params{2};
 t0 = params{3};
+if numel(params)>3,
+    W0 = params{4};
+end
 trainPtIds = partition.trainPtIds;
 trainFeat = pointData.features(:,trainPtIds);
 trainLabels = pointData.labels(trainPtIds);
@@ -23,13 +26,15 @@ trainLabels = pointData.labels(trainPtIds);
 %% Train: Update one-vs-all weights for each new data point
 % equalWeights = ones(pointData.numFeatures, 1);
 % W = repmat(equalWeights./norm(equalWeights), 1, pointData.numClasses);
-W = zeros(pointData.numFeatures, pointData.numClasses);
+
+if exist('W0','var'), W = W0;
+else W = zeros(pointData.numFeatures, pointData.numClasses); end
 
 for pt = 1:partition.trainSize,
    alpha = c/(lambda*(pt+t0)); 
-   if (alpha < 1e-12)
-      warning('alphs = %f for t = %d', alpha, pt);
-   end
+%    if (alpha < 1e-12)
+%       warning('alphs = %f for t = %d', alpha, pt);
+%    end
    y = (pointData.classes == trainLabels(pt)).*2 - 1; % set y in {-1,1}
    W = updateWeights(trainFeat(:,pt), y, W, alpha, lambda);
 end
