@@ -22,7 +22,7 @@
 \section*{Classifiers}
 
 For this homework, we implemented Gaussian Process Regression (GPR),
-Boosting, and online linear SVMs. We used these algorithms in a binary
+Adaptive Boosting, and online linear SVMs. We used these algorithms in a binary
 fashion to classify 3D points into five different classes: Vegetation,
 Wire, Pole, Ground and Facade. Each classifier was trained 5 times in
 a one-vs-all scenario, such that the final classification for a
@@ -34,7 +34,8 @@ in time). Our version of Gaussian Process Regression uses the
 exponential to the negative squared distance between features (radial
 basis function) as the covariance function. Meanwhile, boosting
 performs feature selection, and uses the exponentiated gradient as
-suggested by Alex Grubb.
+suggested by Alex Grubb. We use thresholded decision stumps as linear
+classifiers in boosting.
 
 \section*{Performance Summary}
 
@@ -85,47 +86,57 @@ $$\begin{bmatrix}
 
 \textbf{Train with first file, test with the second file:}
 
-Best parameters: radial basis function parameter $\sigma=.4$, regularization parameter $\lambda=.4642$.
+Best parameters: Running time $T=140$, gradient projection threshold $\eta=1e-4$.
 
-Net classification rate: .8637
+Net classification rate: .8663
 
 Per-class classification rate: 
-$$\begin{bmatrix}0.8208   & 0.8870  &  0.7192   & 0.9796 &   0.6670\end{bmatrix}$$
+$$\begin{bmatrix} 0.8403  &  0.8560   & 0.7017 &   0.9798  &  0.6476\end{bmatrix}$$
 
 Confusion matrix:
 $$\begin{bmatrix}
-0.8208 &   0.0560  & 0.0407 &   0.0015  &  0.0809\\
-    0.0758&    0.8870 &   0.0084&    0.0004 &   0.0285\\
-    0.1971   & 0.0092   & 0.7192  &  0.0046   & 0.0700\\
-    0.0018   & 0.0179    &0.0003  &  0.9796  &  0.0005\\
-    0.1316   &0.1576    &0.0421  &  0.0017  &  0.6670
+    0.8403 &   0.0381  &  0.0437  &  0.0013  &  0.0765\\
+    0.0770  &  0.8560   & 0.0088   & 0.0193  &  0.0389\\
+    0.1888  &  0.0120   & 0.7017   & 0.0055  &  0.0921\\
+    0.0022  &  0.0160   & 0.0001   & 0.9798  &  0.0018\\
+    0.1221  &  0.1457   & 0.0702   & 0.0145  &  0.6476
 \end{bmatrix}$$
 
 \textbf{Train with first file, test with the second file:}
 
-Best parameters: radial basis function parameter $\sigma=.4$, regularization parameter $\lambda=.4642$.
+Best parameters: Running time $T=140$, gradient projection threshold $\eta=1e-4$.
 
-Net classification rate: .947
+Net classification rate: .9495
 
 Per-class classification rate: 
-$$\begin{bmatrix}0.8097  &  0.5697   & 0.9279   & 0.9899  &  0.8305\end{bmatrix}$$
+$$\begin{bmatrix}0.8178 &   0.6320 &   0.9104  &  0.9948  &  0.8148\end{bmatrix}$$
 
 Confusion matrix:
 $$\begin{bmatrix}
-0.8097&    0.0471&    0.0680  &  0.0010  &  0.0743\\
-    0.0685&    0.5697&    0.0183&    0.0697  &  0.2738\\
-    0.0378   & 0.0014&    0.9279  &       0 &   0.0329\\
-    0.0020 &   0.0001 &   0.0065 &   0.9899  &  0.0014\\
-    0.0611   & 0.0391  &  0.0686  &  0.0007&    0.8305\\
+0.8178 &   0.0494   & 0.0656 &   0.0022  &  0.0650\\
+    0.0477 &   0.6320  &  0.0244 &   0.0489 &   0.2469\\
+    0.0378 &   0.0203 &   0.9104  &  0.0007  &  0.0308\\
+    0.0031  &  0.0005 &   0.0010  &  0.9948  &  0.0007\\
+    0.0547  &  0.0578   & 0.0724  &  0.0003  &  0.8148
 \end{bmatrix}$$
 
-We find that points belonging to the 'Pole' and 'Ground' classes do not perform well
-because there is not enough data to train them.
+AdaBoost takes on average a long time to train (148 seconds) but just 1.12 seconds in testing as we just apply a set of thresholded linear classifiers and take their sum. GPR takes lesser training time (12.19 seconds), but it takes a longer test time (26.83 seconds), because we apply the product of the training kernel matrix inverse and the training labels (which can be precomputed) to all the kernel vectors formed with every test point to all training points.
+
+We find that points belonging to the 'Pole', 'Wire', and 'Facade' classes do not always perform well because there is not enough data to train them.
 
 GPR and SVM were relatively easy to implement. AdaBoost required a bit of delving into some math, but 
 we made it through.
 
+GPR is robust to noise. When we added a whole bunch of noise to the features, we still get net classification rates of .865 and .94, and per-class correct classifications:
+$$\begin{bmatrix} 0.8417 &   0.8614 &   0.7164   & 0.9806  &  0.6263\end{bmatrix}$$
+$$\begin{bmatrix} 0.7809  &  0.5733  &  0.9440&    0.9969    &0.7608\end{bmatrix}$$
+Noise-corrupted versions of features when passed through GPR are classified with rates .85 and .94, and per-class classifications are:
+$$\begin{bmatrix} 0.8204  &  0.8757 &   0.6980  &  0.9796 &   0.5859\end{bmatrix}$$
+$$\begin{bmatrix} 0.7779  &  0.5880  &  0.9286  &  0.9950 &   0.7704\end{bmatrix}$$
 
+The same robustness is observed with AdaBoost. On adding a whole bunch of noise to the features, we get rates of .862, and, and per-class classifications of:
+$$\begin{bmatrix} 0.8334 &   0.8514 &   0.6796  & 0.9775  &  0.6465\end{bmatrix}$$
+$$\begin{bmatrix} 0.7809  &  0.5733  &  0.9440&    0.9969    &0.7608\end{bmatrix}$$
 
 \begin{enumerate}
 \item How well did it perform for online learning?  Does it perform well on the held-out data?
