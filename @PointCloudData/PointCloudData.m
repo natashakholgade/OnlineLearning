@@ -62,6 +62,18 @@ classdef PointCloudData
            end
        end
        
+       function obj = addRandomNoisyFeatures(obj, n) 
+            obj.features = [obj.features; randn(n,obj.numPts)];
+            obj.numFeatures = size(obj.features,1);
+       end
+
+       function obj = addCorruptedNoisyFeatures(obj, n) 
+            corrupted = repmat(obj.features+randn(size(obj.features)),n,1);
+            obj.features = [obj.features; corrupted];
+            obj.numFeatures = size(obj.features,1);
+       end
+
+       
    end
    
    methods(Static)
@@ -92,6 +104,7 @@ classdef PointCloudData
               error('Incorrect number of input arguments. Two Point Data Clouds should be provided.'); 
           end
        end
+       
        
    end
 end

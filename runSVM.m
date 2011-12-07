@@ -9,8 +9,8 @@ finalLog = sprintf('%s/finalresults.log', outputFolder);
 
 %% Parameters for SVM: lambda, t0
 %  such that alpha = c/(lambda*(t+t0))
-possibleLambda = [0.01; 0.005; 0.001; 0.0005; 0.0001; 0.00005];   % lambda
-possibleT0 = [1; 10; 100]; % t0
+possibleLambda = [0.05; 0.001; 0.0005; 0.0001; 0.00005; 0.0001; 0.00005];   % lambda
+possibleT0 = [10; 100; 500; 1000]; % t0
       
 %% Fixed params
 c = 1;
@@ -135,7 +135,7 @@ for f=1:2
     logStr = sprintf('%s | %s | %s | %f | %s | %f | %s | %s\n', ...
                      trainFile, testFile, mat2str(cell2mat(bestParamsSVM)), ...
                      processingTime, mat2str(bestW), totalCorrect, mat2str(percentClassCorrect), ...
-                     confusionMat);
+                     mat2str(confusionMat));
 
 %     save(sprintf('%s/Test%d-Result-%s.mat',outputFolder, f,fileAbrv{f}), ...
 %                  'bestParamsSVM','assignedLabels','totalCorrect','percentClassCorrect', ...
