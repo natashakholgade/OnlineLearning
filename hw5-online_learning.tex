@@ -171,9 +171,26 @@ apply the product of the training kernel matrix inverse and the
 training labels (which can be precomputed) to all the kernel vectors
 formed with every test point to all training points.
 
+SVM took even less training time (5.46 seconds in average) and testing
+time (0.03 seconds). Training took longer than testing given that 5
+classifiers were built in total.  Testing only required to find
+out which of these classifiers gave the best score.
 
 \subsection*{Misclassifications}
-We find that points belonging to the `Pole', `Wire', and `Facade' classes do not always perform well because there is not enough data to train them.
+We find that points belonging to the `Pole', `Wire', and `Facade'
+classes do not always perform well. Our intuition was that there is
+not enough data to learn these classes well, so for GPR and Adaboost
+we subsampled the data provided to create a training set with similar
+number of examples per class. Given an initial set of training data,
+we looked for the class with less number of examples (N), and then
+randomly selected N data points from the other classes. We finally
+trained using 5N data points.
+
+We also tested the subsampling strategy with our online SVM, but
+couldn't find any classification improvement. Thus, the results
+presented in this report are those generated using all the available
+training data.
+
 \subsection*{Ease of Implementation}
 GPR and SVM were relatively easy to implement. AdaBoost required a bit of delving into some math, but we made it through.
 \subsection*{Robustness to noise}
