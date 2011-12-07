@@ -63,13 +63,23 @@ classdef PointCloudData
        end
        
        function obj = addRandomNoisyFeatures(obj, n) 
-            obj.features = [obj.features; randn(n,obj.numPts)];
+            newFeat = randn(n,obj.numPts);
+            maxFeat = max(newFeat, [], 2);
+            minFeat = min(newFeat, [], 2);
+            newFeat = [bsxfun(@rdivide, bsxfun(@minus, newFeat, minFeat), maxFeat - minFeat); ones(1,obj.numPts)];
+
+            obj.features = [obj.features(1:end-1,:); newFeat];
             obj.numFeatures = size(obj.features,1);
+            
        end
 
        function obj = addCorruptedNoisyFeatures(obj, n) 
             corrupted = repmat(obj.features+randn(size(obj.features)),n,1);
-            obj.features = [obj.features; corrupted];
+            maxFeat = max(corrupted, [], 2);
+            minFeat = min(corrupted, [], 2);
+            corrupted = [bsxfun(@rdivide, bsxfun(@minus, corrupted, minFeat), maxFeat - minFeat); ones(1,obj.numPts)];
+        
+            obj.features = [obj.features(1:end-1,:); corrupted];
             obj.numFeatures = size(obj.features,1);
        end
 

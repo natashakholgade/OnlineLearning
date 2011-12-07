@@ -91,7 +91,10 @@ classdef DataPartition
                       reducedTrain = [reducedTrain ptsInClass{k}(1:numPerClass)'];
                   end
                   train = reducedTrain';
+%                  train = repmat(reducedTrain',10,1);
               end
+              
+%              train = repmat(train,10,1);
               
               count = count + 1;
               s{count} = DataPartition(train, test);

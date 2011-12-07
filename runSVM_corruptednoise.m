@@ -9,11 +9,11 @@ finalLog = sprintf('%s/finalresults.log', outputFolder);
 
 %% Parameters for SVM: lambda, t0
 %  such that alpha = c/(lambda*(t+t0))
-possibleLambda = [0.05; 0.001; 0.0005; 0.0001; 0.00005; 0.0001; 0.00005];   % lambda
-possibleT0 = [10; 100; 500; 1000]; % t0
+possibleLambda = [0.01; 0.001; 0.0001; 0.0001];   % lambda
+possibleC = [1;5];
+possibleT0 = [10; 100; 500]; % t0
       
 %% Fixed params
-c = 1;
 numPartitions = 2; % number of partitions for training file to fit params
 fAlgorithm = @SVM;
 
@@ -42,9 +42,10 @@ for f=1:2
     
     % Find best set of params
     for l=1:length(possibleLambda)
+     for c=1:length(possibleC)
        for t=1:length(possibleT0)
            
-           params = {possibleLambda(l), c, possibleT0(t)};
+           params = {possibleLambda(l), possibleC(c), possibleT0(t)};
            fprintf('{%f %f %f}, %s, ', params{1}, params{2}, params{3}, fileAbrv{f});
            
            mytic = tic();
@@ -75,6 +76,7 @@ for f=1:2
            pause(.01);
                         
        end
+     end
     end
     
     save(sprintf('%s/Train%d-BestResult-%s.mat',outputFolder, f,fileAbrv{f}), ...
@@ -116,8 +118,8 @@ for f=1:2
             numCorrectClass(k) = sum(correct == 1 & testLabels == pointDataTest.classes(k));
             percentClassCorrect(k) = numCorrectClass(k)/sum(ptsInClass);
 
-            for c = 1:pointDataTest.numClasses
-                confusionMat(k,c) = sum(ptsInClass & assignedLabels == pointDataTest.classes(c));
+            for k2 = 1:pointDataTest.numClasses
+                confusionMat(k,k2) = sum(ptsInClass & assignedLabels == pointDataTest.classes(k2));
             end
         end
         confusionMat=bsxfun(@rdivide,confusionMat,sum(confusionMat,2));
@@ -132,10 +134,10 @@ for f=1:2
              'bestParamsSVM','assignedLabels','totalCorrect','percentClassCorrect', ...
              'confusionMat','bestW','pointDataTest', ...
              'trainFile', 'testFile');
-    logStr = sprintf('%s | %s | %s | %f | %s | %f | %s | %s\n', ...
+    logStr = sprintf('%s | %s | %s | %f | %f | %s | %s | %s\n', ...
                      trainFile, testFile, mat2str(cell2mat(bestParamsSVM)), ...
-                     processingTime, mat2str(bestW), totalCorrect, mat2str(percentClassCorrect), ...
-                     mat2str(confusionMat));
+                     processingTime, totalCorrect, mat2str(percentClassCorrect), ...
+                     mat2str(confusionMat), mat2str(bestW));
 
 %     save(sprintf('%s/Test%d-Result-%s.mat',outputFolder, f,fileAbrv{f}), ...
 %                  'bestParamsSVM','assignedLabels','totalCorrect','percentClassCorrect', ...
