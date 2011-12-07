@@ -20,7 +20,6 @@
 \maketitle
 
 \section*{Classifiers}
-
 For this homework, we implemented Gaussian Process Regression (GPR),
 Adaptive Boosting, and online linear SVMs. We used these algorithms in a binary
 fashion to classify 3D points into five different classes: Vegetation,
@@ -44,7 +43,6 @@ classify new data in comparison to the other algorithms being
 considered.
 
 \section*{Performance Summary}
-
 For this homework, we performed two-fold cross-validation on data from
 one file, and then tested with data from the other file. We swapped
 the two files, and re-did cross-validation and training. We provide
@@ -63,91 +61,67 @@ to the file \textit{oakland\_part3\_an\_rf.node\_features} as
 Best parameters: radial basis function parameter $\sigma=.4$,
 regularization parameter $\lambda=.4642$.
 
-Net classification rate: .8637
+Net classification rate: .$8637$.
 
 Per-class classification rate: 
 $$\begin{bmatrix}0.8208   & 0.8870  &  0.7192   & 0.9796 &   0.6670\end{bmatrix}$$
-
-Confusion matrix:
-$$\begin{bmatrix}
-0.8208 &   0.0560  & 0.0407 &   0.0015  &  0.0809\\
-    0.0758&    0.8870 &   0.0084&    0.0004 &   0.0285\\
-    0.1971   & 0.0092   & 0.7192  &  0.0046   & 0.0700\\
-    0.0018   & 0.0179    &0.0003  &  0.9796  &  0.0005\\
-    0.1316   &0.1576    &0.0421  &  0.0017  &  0.6670
-\end{bmatrix}$$
 
 \textbf{Train with \textit{File\_an}, and test with \textit{File\_am}:}
 
 Best parameters: radial basis function parameter $\sigma=.4$, regularization parameter $\lambda=.4642$.
 
-Net classification rate: .947
+Net classification rate: $.947$.
 
 Per-class classification rate: 
 $$\begin{bmatrix}0.8097  &  0.5697   & 0.9279   & 0.9899  &  0.8305\end{bmatrix}$$
-
-Confusion matrix:
-$$\begin{bmatrix}
-0.8097&    0.0471&    0.0680  &  0.0010  &  0.0743\\
-    0.0685&    0.5697&    0.0183&    0.0697  &  0.2738\\
-    0.0378   & 0.0014&    0.9279  &       0 &   0.0329\\
-    0.0020 &   0.0001 &   0.0065 &   0.9899  &  0.0014\\
-    0.0611   & 0.0391  &  0.0686  &  0.0007&    0.8305\\
-\end{bmatrix}$$
-
-
+\begin{figure}
+\begin{minipage}{.45\linewidth}
+   \includegraphics[width=\linewidth]{confusionmatrices/gpr_train_am_test_an.png}
+   \small\centerline{Test with File-an}\normalsize
+   \end{minipage}
+\begin{minipage}{.45\linewidth}
+   \includegraphics[width=\linewidth]{confusionmatrices/gpr_train_an_test_am.png}
+   \small\centerline{Test with File-am}\normalsize
+   \end{minipage}
+   \caption{Confusion matrices for GPR classification.}
+\end{figure}
 \subsection*{Linear SVMs}
 
 \subsection*{AdaBoost}
-
 \textbf{Train with \textit{File\_am}, and test with \textit{File\_an}:}
 
 Best parameters: Running time $T=140$, gradient projection threshold $\eta=1e-4$.
 
-Net classification rate: .8663
+Net classification rate: $.8663$.
 
 Per-class classification rate: 
 $$\begin{bmatrix} 0.8403  &  0.8560   & 0.7017 &   0.9798  &  0.6476\end{bmatrix}$$
-
-Confusion matrix:
-$$\begin{bmatrix}
-    0.8403 &   0.0381  &  0.0437  &  0.0013  &  0.0765\\
-    0.0770  &  0.8560   & 0.0088   & 0.0193  &  0.0389\\
-    0.1888  &  0.0120   & 0.7017   & 0.0055  &  0.0921\\
-    0.0022  &  0.0160   & 0.0001   & 0.9798  &  0.0018\\
-    0.1221  &  0.1457   & 0.0702   & 0.0145  &  0.6476
-\end{bmatrix}$$
 
 \textbf{Train with \textit{File\_an}, and test with \textit{File\_am}:}
 
 Best parameters: Running time $T=140$, gradient projection threshold $\eta=1e-4$.
 
-Net classification rate: .9495
+Net classification rate: $.9495$.
 
 Per-class classification rate: 
 $$\begin{bmatrix}0.8178 &   0.6320 &   0.9104  &  0.9948  &  0.8148\end{bmatrix}$$
-
-Confusion matrix:
-$$\begin{bmatrix}
-0.8178 &   0.0494   & 0.0656 &   0.0022  &  0.0650\\
-    0.0477 &   0.6320  &  0.0244 &   0.0489 &   0.2469\\
-    0.0378 &   0.0203 &   0.9104  &  0.0007  &  0.0308\\
-    0.0031  &  0.0005 &   0.0010  &  0.9948  &  0.0007\\
-    0.0547  &  0.0578   & 0.0724  &  0.0003  &  0.8148
-\end{bmatrix}$$
-
+\begin{figure}
+\begin{minipage}{.45\linewidth}
+   \includegraphics[width=\linewidth]{confusionmatrices/boost_train_am_test_an.png}
+   \small\centerline{Test with File-an}\normalsize
+   \end{minipage}
+\begin{minipage}{.45\linewidth}
+   \includegraphics[width=\linewidth]{confusionmatrices/boost_train_an_test_am.png}
+   \small\centerline{Test with File-am}\normalsize
+   \end{minipage}
+   \caption{Confusion matrices for classification with AdaBoost.}
+\end{figure}
 \subsection*{Time}
-
 AdaBoost takes on average a long time to train (148 seconds) but just 1.12 seconds in testing as we just apply a set of thresholded linear classifiers and take their sum. GPR takes lesser training time (12.19 seconds), but it takes a longer test time (26.83 seconds), because we apply the product of the training kernel matrix inverse and the training labels (which can be precomputed) to all the kernel vectors formed with every test point to all training points.
-
 \subsection*{Misclassifications}
 We find that points belonging to the `Pole', `Wire', and `Facade' classes do not always perform well because there is not enough data to train them.
-
 \subsection*{Ease of Implementation}
-
-GPR and SVM were relatively easy to implement. AdaBoost required a bit of delving into some math, but 
-we made it through.
-
+GPR and SVM were relatively easy to implement. AdaBoost required a bit of delving into some math, but we made it through.
 \subsection*{Robustness to noise}
 GPR is robust to noise. When we added a whole bunch of noise to the features, we still get net classification rates of .865 and .94, and per-class correct classifications:
 $$\begin{bmatrix} 0.8417 &   0.8614 &   0.7164   & 0.9806  &  0.6263\end{bmatrix}$$
