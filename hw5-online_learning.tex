@@ -119,7 +119,7 @@ Per-class classification rate:
 
 \begin{figure}
 \begin{minipage}{.45\linewidth}
-   \includegraphics[width=\linewidth]{confusionmatrices/confusionSVMQ1_1.jpeg}
+   \includegraphics[width=\linewidth]{confusionmatrices/confusionSVMQ1_1.png}
    \small\centerline{Test with File\_an}\normalsize
    \end{minipage}
 \begin{minipage}{.45\linewidth}
@@ -208,7 +208,19 @@ Noise-corrupted versions of features when passed through AdaBoost are classified
 $$\begin{bmatrix} 0.8543 &   0.8548 &   0.6888&    0.9725  &  0.6410\end{bmatrix}$$
 $$\begin{bmatrix} 0.8063  &  0.6112 &   0.9174  &  0.9918  &  0.8062\end{bmatrix}$$
 
-We would most probably use AdaBoost for the robot because it is faster than Gaussian Process Regression during testing (though it performs just as well), and it performs better than the linear SVM. If we needed an online version of the training algorithm, we would probably use SVMs, but with kernels. We did not have time to implement the kernel SVMs, but we do notice that the dataset has some non-linearity as is evidenced by the better performance of GPR and AdaBoost.
+Likewise, we observed for the SVM that adding random noise to the
+features did not impact performance negatively. We get rates of 0.767
+and 0.958, with per-class classifications as follows:
+$$\begin{bmatrix} 0.5970    & 0.1951    & 0.4521    & 0.9984   & 0.9456\end{bmatrix}$$
+$$\begin{bmatrix} 0.8776  &  0.4474  &  0.7047  &  0.9975  &  0.8608\end{bmatrix}$$
+
+We would most probably use AdaBoost for the robot because it is faster
+than Gaussian Process Regression during testing (though it performs
+just as well), and it performs better than the linear SVM. If we
+needed an online version of the training algorithm, we would probably
+use SVMs, but with kernels. We did not have time to implement the
+kernel SVMs, but we do notice that the dataset has some non-linearity
+as is evidenced by the better performance of GPR and AdaBoost.
 
 \subsection*{Pictorial Result}
 With GPR training with \textit{File\_am}, and testing with \textit{File\_an} gave us the scatter plot shown in \ref{Fig_GPR1}, while training with \textit{File\_an}, and testing with \textit{File\_am} gave us the plot in \ref{Fig_GPR2}
