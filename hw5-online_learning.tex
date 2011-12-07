@@ -214,6 +214,16 @@ and 0.958, with per-class classifications as follows:
 $$\begin{bmatrix} 0.5970    & 0.1951    & 0.4521    & 0.9984   & 0.9456\end{bmatrix}$$
 $$\begin{bmatrix} 0.8776  &  0.4474  &  0.7047  &  0.9975  &  0.8608\end{bmatrix}$$
 
+The results for the SVM were very interesting when we input
+noise-corrupted features, as we obtained 0.806 and 0.9519. We believe
+that the noise in this case led to learn a classifier that could
+generalize better, by reducing the chances of overfitting. The
+per-class classification results were:
+$$\begin{bmatrix} 0.6839  &  0.4667  &  0.2928  &  0.9991  &  0.8873\end{bmatrix}$$
+$$\begin{bmatrix} 0.9189   & 0.4511   & 0.6060    & 0.9941   & 0.8153\end{bmatrix}$$
+
+\subsection*{Final Remarks}
+
 We would most probably use AdaBoost for the robot because it is faster
 than Gaussian Process Regression during testing (though it performs
 just as well), and it performs better than the linear SVM. If we
