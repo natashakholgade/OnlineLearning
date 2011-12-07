@@ -136,14 +136,19 @@ $$\begin{bmatrix}
     0.0547  &  0.0578   & 0.0724  &  0.0003  &  0.8148
 \end{bmatrix}$$
 
+\subsection*{Time}
+
 AdaBoost takes on average a long time to train (148 seconds) but just 1.12 seconds in testing as we just apply a set of thresholded linear classifiers and take their sum. GPR takes lesser training time (12.19 seconds), but it takes a longer test time (26.83 seconds), because we apply the product of the training kernel matrix inverse and the training labels (which can be precomputed) to all the kernel vectors formed with every test point to all training points.
 
-We find that points belonging to the 'Pole', 'Wire', and 'Facade' classes do not always perform well because there is not enough data to train them.
+\subsection*{Misclassifications}
+We find that points belonging to the `Pole', `Wire', and `Facade' classes do not always perform well because there is not enough data to train them.
+
+\subsection*{Ease of Implementation}
 
 GPR and SVM were relatively easy to implement. AdaBoost required a bit of delving into some math, but 
 we made it through.
 
-<<<<<<< Updated upstream
+\subsection*{Robustness to noise}
 GPR is robust to noise. When we added a whole bunch of noise to the features, we still get net classification rates of .865 and .94, and per-class correct classifications:
 $$\begin{bmatrix} 0.8417 &   0.8614 &   0.7164   & 0.9806  &  0.6263\end{bmatrix}$$
 $$\begin{bmatrix} 0.7809  &  0.5733  &  0.9440&    0.9969    &0.7608\end{bmatrix}$$
@@ -154,6 +159,9 @@ $$\begin{bmatrix} 0.7779  &  0.5880  &  0.9286  &  0.9950 &   0.7704\end{bmatrix
 The same robustness is observed with AdaBoost. On adding a whole bunch of noise to the features, we get rates of .862, and, and per-class classifications of:
 $$\begin{bmatrix} 0.8334 &   0.8514 &   0.6796  & 0.9775  &  0.6465\end{bmatrix}$$
 $$\begin{bmatrix} 0.7809  &  0.5733  &  0.9440&    0.9969    &0.7608\end{bmatrix}$$
+Noise-corrupted versions of features when passed through AdaBoost are classified with rates .8676 and .94, and per-class classifications are:
+$$\begin{bmatrix} 0.8543 &   0.8548 &   0.6888&    0.9725  &  0.6410\end{bmatrix}$$
+$$\begin{bmatrix} 0.7779  &  0.5880  &  0.9286  &  0.9950 &   0.7704\end{bmatrix}$$
 
 \begin{enumerate}
 \item How well did it perform for online learning?  Does it perform well on the held-out data?

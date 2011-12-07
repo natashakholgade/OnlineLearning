@@ -15,6 +15,7 @@ twoclassdecisions=zeros(ntest,length(labelIDs));
 Ws=cell(1,length(labelIDs));
 Alphas=cell(1,length(labelIDs));
 
+tic;
 for i=1:length(labelIDs)
     l=labels(trainnums);
     y=2*double(l==labelIDs(i))-1;
@@ -26,11 +27,14 @@ for i=1:length(labelIDs)
     Ws{i}=W;
     Alphas{i}=Alpha;
 end
+toc;
 
+tic;
 for i=1:length(labelIDs)
     f=boostTest(testfeatures,Ws{i},Alphas{i});
     twoclassdecisions(:,i)=f;
 end
+toc;
 
 [~,imulticlassdecision]=max(twoclassdecisions,[],2);
 outputtestlabels=labelIDs(imulticlassdecision);

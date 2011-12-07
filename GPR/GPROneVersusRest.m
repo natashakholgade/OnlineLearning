@@ -1,4 +1,4 @@
-function [imulticlassdecision,totalcorrect,percentclasscorrect,confusionmatrix]=GPROneVersusRest(features,labels,trainnums,testnums,params)
+function [imulticlassdecision,totalcorrect,percentclasscorrect,confusionmatrix,vtrain]=GPROneVersusRest(features,labels,trainnums,testnums,params)
 
 kernelFunc=@kernelExp;
 %sigma=(max(features(:,trainnums),[],2)-min(features(:,trainnums),[],2));
@@ -28,6 +28,7 @@ ntest=length(testnums);
 
 twoclassdecisions=zeros(ntest,length(labelIDs));
 vtrain=zeros(ntrain,length(labelIDs));
+tic;
 for i=1:length(labelIDs)
     fprintf('Training %d\n',i);
     l=labels(trainnums);
@@ -35,12 +36,15 @@ for i=1:length(labelIDs)
     vtrain(:,i)=GPRTrainOnlineTwoclass(trainfeatures,f,lambda,kernelFunc,kernelparams);
 %    KinvGPR(:,:,i)=KinvGPRi;
 end
+toc;
+tic;
 for i=1:length(labelIDs)
     fprintf('Testing %d\n',i);
     d=GPRTestOnlineTwoClass(trainfeatures,testfeatures,vtrain(:,i),kernelFunc,kernelparams);
     twoclassdecisions(:,i)=d;
 end
 [~,imulticlassdecision]=max(twoclassdecisions,[],2);
+toc;
 outputtestlabels=labelIDs(imulticlassdecision);
 realtestlabels=labels(testnums);
 
