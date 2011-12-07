@@ -1,13 +1,21 @@
-function Kinvtrain=GPRTrainOnlineTwoclass(Xtrain,lambda,kernelFunc,params)
+function vtrain=GPRTrainOnlineTwoclass(Xtrain,Ftrain,lambda,kernelFunc,params)
+
+%vtrain=pcg(@(x)kfun(x,Xtrain,kernelFunc,params,lambda),Ftrain,1e-3,100);
 
 ntrain=size(Xtrain,2);
+stepsize=ntrain;
+vtrain=(kernelFunc(Xtrain(:,1:stepsize),Xtrain(:,1:stepsize),params)+lambda*lambda*eye(stepsize))\Ftrain;
+
+end
+
+%ntrain=size(Xtrain,2);
 %Kinvtrain=zeros(ntrain,ntrain);
 %stepsize=50;
-stepsize=ntrain;
+%stepsize=ntrain;
 
 %Kinvtrain(1:stepsize,1:stepsize)=eye(stepsize)/(kernelFunc(Xtrain(:,1:step
 %size),Xtrain(:,1:stepsize),params)+lambda*lambda*eye(stepsize));
-Kinvtrain=eye(stepsize)/(kernelFunc(Xtrain(:,1:stepsize),Xtrain(:,1:stepsize),params)+lambda*lambda*eye(stepsize));
+%Kinvtrain=eye(stepsize)/(kernelFunc(Xtrain(:,1:stepsize),Xtrain(:,1:stepsize),params)+lambda*lambda*eye(stepsize));
 
 % for i=stepsize+1:stepsize:ntrain
 %     fprintf('%d...',i);
@@ -40,5 +48,3 @@ Kinvtrain=eye(stepsize)/(kernelFunc(Xtrain(:,1:stepsize),Xtrain(:,1:stepsize),pa
 %     -vec(inv(kernelExp(Xtrain(:,1:i+stepsize-1),Xtrain(:,1:i+stepsize-1),params)+lambda*lambda*eye(length(1:i+stepsize-1)))))
 %     
 % end
-
-end

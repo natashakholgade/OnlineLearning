@@ -1,11 +1,10 @@
-function [imulticlassdecision,totalcorrect,percentclasscorrect,confusionmatrix]=GPROneVersusRest(features,labels,trainnums,testnums)
+function [imulticlassdecision,totalcorrect,percentclasscorrect,confusionmatrix]=GPROneVersusRest(features,labels,trainnums,testnums,params)
 
 kernelFunc=@kernelExp;
 %sigma=(max(features(:,trainnums),[],2)-min(features(:,trainnums),[],2));
 %sigma(sigma<1e-6)=.1;
 %sigma=sigma/1;
 
-sigma=.5;
 % scale the features so they lie between 0 and 1
 featureoffset=min(features(:,trainnums),[],2);
 featurescale=max(features(:,trainnums),[],2)-min(features(:,trainnums),[],2);
@@ -13,8 +12,14 @@ featurescale=max(features(:,trainnums),[],2)-min(features(:,trainnums),[],2);
 trainfeatures=bsxfun(@rdivide,bsxfun(@minus,features(:,trainnums),featureoffset),featurescale);
 testfeatures=bsxfun(@rdivide,bsxfun(@minus,features(:,testnums),featureoffset),featurescale);
 
-lambda=.01;
-params={sigma};
+if ~exist('params','var')
+    lambda=.01;
+    sigma=.5;
+    kernelparams={sigma};
+else
+    lambda=params{1};
+    kernelparams=params(2);
+end
 
 labelIDs=unique(labels);
 ntrain=length(trainnums);
@@ -22,17 +27,20 @@ ntest=length(testnums);
 %KinvGPR=zeros(ntrain,ntrain,length(labelIDs));
 
 twoclassdecisions=zeros(ntest,length(labelIDs));
-%for i=1:length(labelIDs)
-    KinvGPR=GPRTrainOnlineTwoclass(trainfeatures,lambda,kernelFunc,params);
-%    KinvGPR(:,:,i)=KinvGPRi;
-%end
+vtrain=zeros(ntrain,length(labelIDs));
 for i=1:length(labelIDs)
+    fprintf('Training %d\n',i);
     l=labels(trainnums);
-    f=2*double(l==labelIDs(i))-1;
-    d=GPRTestOnlineTwoClass(trainfeatures,f,testfeatures,KinvGPR,lambda,kernelFunc,params);
+    f=(2*double(l==labelIDs(i))-1)';
+    vtrain(:,i)=GPRTrainOnlineTwoclass(trainfeatures,f,lambda,kernelFunc,kernelparams);
+%    KinvGPR(:,:,i)=KinvGPRi;
+end
+for i=1:length(labelIDs)
+    fprintf('Testing %d\n',i);
+    d=GPRTestOnlineTwoClass(trainfeatures,testfeatures,vtrain(:,i),kernelFunc,kernelparams);
     twoclassdecisions(:,i)=d;
 end
-[multiclassdecision,imulticlassdecision]=max(twoclassdecisions,[],2);
+[~,imulticlassdecision]=max(twoclassdecisions,[],2);
 outputtestlabels=labelIDs(imulticlassdecision);
 realtestlabels=labels(testnums);
 
@@ -54,6 +62,6 @@ for i=1:length(labelIDs)
     end
 end
 
-percentclasscorrect=sumIDs./numIDs;
+percentclasscorrect=sumIDs./numIDs
 
 end
