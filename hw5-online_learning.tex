@@ -150,11 +150,11 @@ $$\begin{bmatrix}0.8178 &   0.6320 &   0.9104  &  0.9948  &  0.8148\end{bmatrix}
 \begin{figure}
 \begin{minipage}{.45\linewidth}
    \includegraphics[width=\linewidth]{confusionmatrices/boost_train_am_test_an.png}
-   \small\centerline{Test with File-an}\normalsize
+   \small\centerline{Test with File\_an}\normalsize
    \end{minipage}
 \begin{minipage}{.45\linewidth}
    \includegraphics[width=\linewidth]{confusionmatrices/boost_train_an_test_am.png}
-   \small\centerline{Test with File-am}\normalsize
+   \small\centerline{Test with File\_am}\normalsize
    \end{minipage}
    \caption{Confusion matrices for classification with AdaBoost.}
 \end{figure}
@@ -214,10 +214,10 @@ $$\begin{bmatrix} 0.5970    & 0.1951    & 0.4521    & 0.9984   & 0.9456\end{bmat
 $$\begin{bmatrix} 0.8776  &  0.4474  &  0.7047  &  0.9975  &  0.8608\end{bmatrix}$$
 
 The results for the SVM were very interesting when we input
-noise-corrupted features, as we obtained 0.806 and 0.9519. We believe
-that the noise in this case led to learn a classifier that could
-generalize better, by reducing the chances of overfitting. The
-per-class classification results were:
+noise-corrupted features, as we obtained 0.806 and 0.9519
+classification rates. We believe that the noise in this case led to
+learn a classifier that could generalize better, by reducing the
+chances of overfitting. The per-class classification results were:
 $$\begin{bmatrix} 0.6839  &  0.4667  &  0.2928  &  0.9991  &  0.8873\end{bmatrix}$$
 $$\begin{bmatrix} 0.9189   & 0.4511   & 0.6060    & 0.9941   & 0.8153\end{bmatrix}$$
 
@@ -225,53 +225,53 @@ $$\begin{bmatrix} 0.9189   & 0.4511   & 0.6060    & 0.9941   & 0.8153\end{bmatri
 
 We would most probably use AdaBoost for the robot because it is faster
 than Gaussian Process Regression during testing (though it performs
-just as well), and it performs better than the linear SVM. If we
+just as well), and in general it performed better than linear SVM. If we
 needed an online version of the training algorithm, we would probably
-use SVMs, but with kernels. We did not have time to implement the
-kernel SVMs, but we do notice that the dataset has some non-linearity
+use SVMs, but with kernels. We did not have time to implement a
+kernel-based SVM, but we do notice that the dataset has some non-linearity
 as is evidenced by the better performance of GPR and AdaBoost.
 
 \subsection*{Pictorial Result}
-With GPR training with \textit{File\_am}, and testing with \textit{File\_an} gave us the scatter plot shown in \ref{Fig_GPR1}, while training with \textit{File\_an}, and testing with \textit{File\_am} gave us the plot in \ref{Fig_GPR2}
+Training GPR with \textit{File\_am}, and testing with
+\textit{File\_an} gave us the scatter plot shown in \ref{Fig_GPR1},
+while training with \textit{File\_an}, and testing with
+\textit{File\_am} gave us the plot in \ref{Fig_GPR2}
 \begin{figure}
 \includegraphics[width=.8\linewidth]{gpr_trainam_testan.png}
-\caption{Scatter plot of points from File-am classified with GPR: green = vegetation, blue = facade, really dark gray = wire, red = pole, light gray = ground}
+\caption{Scatter plot of points from File\_am classified with GPR: green = vegetation, blue = facade, really dark gray = wire, red = pole, light gray = ground}
 \label{Fig_GPR1}
 \end{figure}
 \begin{figure}
 \includegraphics[width=.8\linewidth]{gpr_trainan_testam.png}
-\caption{Scatter plot of points from File-an classified with GPR: green = vegetation, blue = facade, really dark gray = wire, red = pole, light gray = ground}
+\caption{Scatter plot of points from File\_an classified with GPR: green = vegetation, blue = facade, really dark gray = wire, red = pole, light gray = ground}
 \label{Fig_GPR2}
 \end{figure}
 
-With AdaBoost training with \textit{File\_am}, and testing with \textit{File\_an} gave us the scatter plot shown in \ref{Fig_Ada1}, while training with \textit{File\_an}, and testing with \textit{File\_am} gave us the plot in \ref{Fig_Ada2}
+Training AdaBoost with \textit{File\_am}, and testing with \textit{File\_an} gave us the scatter plot shown in \ref{Fig_Ada1}, while training with \textit{File\_an}, and testing with \textit{File\_am} gave us the plot in \ref{Fig_Ada2}
 \begin{figure}[t]
 \includegraphics[width=.8\linewidth]{boost_trainam_testan.png}
-\caption{Scatter plot of points from File-am classified with AdaBoost: green = vegetation, blue = facade, really dark gray = wire, red = pole, light gray = ground}
+\caption{Scatter plot of points from File\_am classified with AdaBoost: green = vegetation, blue = facade, really dark gray = wire, red = pole, light gray = ground}
 \label{Fig_Ada1}
 \end{figure}
 \begin{figure}[t]
 \includegraphics[width=.8\linewidth]{boost_trainan_testam.png}
-\caption{Scatter plot of points from File-an classified with AdaBoost: green = vegetation, blue = facade, really dark gray = wire, red = pole, light gray = ground}
+\caption{Scatter plot of points from File\_an classified with AdaBoost: green = vegetation, blue = facade, really dark gray = wire, red = pole, light gray = ground}
 \label{Fig_Ada2}
 \end{figure}
 
-
-\begin{enumerate}
-\item How well did it perform for online learning?  Does it perform well on the held-out data?
-\item Are there any classes that did not get classified well?  Why do you think that is?
-\item How easy was the learner to implement?
-\item How long does the learner take (in terms of data points, dimensions, classes, etc...) for training and prediction?
-\item Show images/movies of the classified data.  Note that MATLAB is not very good at displaying thousands of 3D points; use VRML or python.
-\item How did you choose (hyper)parameters (priors, kernel width, noise variance, prior variance, learning rate, etc\ldots)?
-\item How robust is this algorithm to noise? Take the current feature set and:
-  \begin{itemize}
-  \item Add a large number of random features
-  \item Add a large number of features that are noise corrupted versions of the features already in the data-set.
-  \end{itemize}
-
-\end{enumerate}
-
-You should also compare the learners' performance to each other.  Did kernels help on this data set?  Which one would you use on your robot?  What would future work include?
+Training our SVM with \textit{File\_am}, and testing with
+\textit{File\_an} gave us the scatter plot shown in \ref{Fig_SVM1},
+while training with \textit{File\_an}, and testing with
+\textit{File\_am} gave us the plot in \ref{Fig_SVM2}
+\begin{figure}[t]
+\includegraphics[width=.8\linewidth]{plotSVMQ1_1.jpg}
+\caption{Scatter plot of points from File\_am classified with SVM: green = vegetation, blue = facade, really dark gray = wire, red = pole, light gray = ground}
+\label{Fig_Ada1}
+\end{figure}
+\begin{figure}[t]
+\includegraphics[width=.8\linewidth]{plotSVMQ1_2.jpg}
+\caption{Scatter plot of points from File\_an classified with SVM: green = vegetation, blue = facade, really dark gray = wire, red = pole, light gray = ground}
+\label{Fig_Ada2}
+\end{figure}
 
 \end{document}
