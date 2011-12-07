@@ -1,9 +1,8 @@
-function [muPosterior]=GPRTestOnlineTwoClass(Xtrain,Ftrain,Xtest,KinvGPR,lambda,kernelFunc,params)
+function [muPosterior]=GPRTestOnlineTwoClass(Xtrain,Xtest,D,kernelFunc,params)
 
 ntest=size(Xtest,2);
 %Kinvtrain(1:stepsize,1:stepsize)=eye(stepsize)/(kernelFunc(Xtrain(:,1:stepsize),Xtrain(:,1:stepsize),params)+lambda*lambda*eye(stepsize));
 
-D=KinvGPR*Ftrain';
 muPrior=zeros(1,ntest);
 muPosterior=zeros(1,ntest);
 %KPosterior=zeros(ntest,ntest);
