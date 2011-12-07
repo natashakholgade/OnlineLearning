@@ -1,7 +1,7 @@
 \documentclass[letterpaper]{article}
 \title{16831 Statistical Techniques, Fall 2011\\Homework 5: Online Learning}
-\date{\textbf{Due:} Monday December 5th, emailed by the beginning of class}
-\author{You should work in groups of 2 or 3.}
+\date{December 7th, 2011}
+\author{Natasha Kholgade and Marynel V\'azquez}
 \usepackage[margin=1in]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -21,7 +21,20 @@
 
 \section*{Classifiers}
 
-For this homework, we implemented Gaussian Process Regression (GPR), Boosting, and Online linear SVMs. GPR and boosting were not implemented in an online fashion (though boosting does lend itself to an online implementation, but we were limited in time on this homework). Gaussian Process Regression uses the covariance function, while boosting performs feature selection. We implemented Alex Grubb's version of boosting which uses the exponentiated gradient to produce our results. For the GPR, we used the exponential to the negative squared distance between features (radial basis function) as the covariance function.
+For this homework, we implemented Gaussian Process Regression (GPR),
+Boosting, and online linear SVMs. We used these algorithms in a binary
+fashion to classify 3D points into five different classes: Vegetation,
+Wire, Pole, Ground and Facade. Each classifier was trained 5 times in
+a one-vs-all scenario, such that the final classification for a
+testing data point was given by the class with highest score.
+
+GPR and boosting were not implemented in an online fashion (though
+boosting does lend itself to an online implementation, we were limited
+in time). Our version of Gaussian Process Regression uses the
+exponential to the negative squared distance between features (radial
+basis function) as the covariance function. Meanwhile, boosting
+performs feature selection, and uses the exponentiated gradient as
+suggested by Alex Grubb.
 
 \section*{Performance Summary}
 
