@@ -37,15 +37,31 @@ performs feature selection, and uses the exponentiated gradient as
 suggested by Alex Grubb. We use thresholded decision stumps as linear
 classifiers in boosting.
 
+Our implementation of a Supper Vector Machine is based on the
+subgradient of the hinge loss, plus a regularization term. It operates
+fast, though requires a significant number of samples to satisfactory
+classify new data in comparison to the other algorithms being
+considered.
+
 \section*{Performance Summary}
 
-For this homework, we performed two-fold cross-validation on data from one file, and then tested with data from the other file. We swapped the two files, and re-did cross-validation and training. We provide the best parameters, confusion matrices, per-class percentage performance, and net classification rate for the three classes. 
+For this homework, we performed two-fold cross-validation on data from
+one file, and then tested with data from the other file. We swapped
+the two files, and re-did cross-validation and training. We provide
+the best parameters, confusion matrices, per-class percentage
+performance, and net classification rate for the three classes.
+
+For brevity, we refer to the point cloud data file
+\textit{oakland\_part3\_am\_rf.node\_features} as \textit{File\_am}, and
+to the file \textit{oakland\_part3\_an\_rf.node\_features} as
+\textit{File\_an} in the following sections.
 
 \subsection*{Gaussian Process Regression}
 
-\textbf{Train with first file, test with the second file:}
+\textbf{Train with \textit{File\_am}, and test with \textit{File\_an}:}
 
-Best parameters: radial basis function parameter $\sigma=.4$, regularization parameter $\lambda=.4642$.
+Best parameters: radial basis function parameter $\sigma=.4$,
+regularization parameter $\lambda=.4642$.
 
 Net classification rate: .8637
 
@@ -61,7 +77,7 @@ $$\begin{bmatrix}
     0.1316   &0.1576    &0.0421  &  0.0017  &  0.6670
 \end{bmatrix}$$
 
-\textbf{Train with first file, test with the second file:}
+\textbf{Train with \textit{File\_an}, and test with \textit{File\_am}:}
 
 Best parameters: radial basis function parameter $\sigma=.4$, regularization parameter $\lambda=.4642$.
 
@@ -127,6 +143,7 @@ We find that points belonging to the 'Pole', 'Wire', and 'Facade' classes do not
 GPR and SVM were relatively easy to implement. AdaBoost required a bit of delving into some math, but 
 we made it through.
 
+<<<<<<< Updated upstream
 GPR is robust to noise. When we added a whole bunch of noise to the features, we still get net classification rates of .865 and .94, and per-class correct classifications:
 $$\begin{bmatrix} 0.8417 &   0.8614 &   0.7164   & 0.9806  &  0.6263\end{bmatrix}$$
 $$\begin{bmatrix} 0.7809  &  0.5733  &  0.9440&    0.9969    &0.7608\end{bmatrix}$$
